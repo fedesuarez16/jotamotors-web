@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./landing.css";
 
 // Destination of “Agenda tu revisión” on the original Jotamotors website.
@@ -23,6 +23,18 @@ function WhatsAppCTA({ children = "Agendar mi revisión", message, className = "
   return <a href={whatsapp(message)} target="_blank" rel="noopener noreferrer" className={`jm-cta ${className}`}><Icon name="whatsapp" /><span>{children}</span><Icon name="arrow" className="jm-cta-arrow" /></a>;
 }
 
+declare global { interface Window { gtag?: (...args: unknown[]) => void } }
+
+// One delegated listener tracks every wa.me link, so new CTAs are measured without extra wiring.
+function trackWhatsAppClicks(event: MouseEvent) {
+  const link = (event.target as Element | null)?.closest<HTMLAnchorElement>('a[href^="https://wa.me/"]');
+  if (!link) return;
+  window.gtag?.("event", "contact_whatsapp", {
+    cta_section: link.closest("section, header, footer")?.id || link.closest("section, header, footer")?.tagName.toLowerCase() || "floating",
+    cta_text: (link.textContent || link.getAttribute("aria-label") || "").trim().slice(0, 100),
+  });
+}
+
 const concerns = ["Mi auto hace un ruido", "Se encendió un testigo", "Me toca mantención", "Necesito revisión técnica"];
 const services = [
   { image: "aceite", label: "MANTENCIÓN", title: "Que los kilómetros no te pasen la cuenta.", text: "Cambio de aceite y revisión de filtros para cuidar el motor y mantener tu auto al día.", cta: "Cotizar mi mantención", message: "Hola Jotamotors, quiero cotizar una mantención y cambio de aceite. Les comparto marca, modelo, año y kilometraje de mi vehículo:" },
@@ -41,6 +53,10 @@ const questions = [
 export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [concern, setConcern] = useState<string | null>(null);
+  useEffect(() => {
+    document.addEventListener("click", trackWhatsAppClicks);
+    return () => document.removeEventListener("click", trackWhatsAppClicks);
+  }, []);
   const selectedMessage = concern ? `Hola Jotamotors, quiero agendar una revisión. ${concern}. ¿Me pueden orientar y confirmar disponibilidad?` : defaultMessage;
   return (
     <div className="jm-site">
