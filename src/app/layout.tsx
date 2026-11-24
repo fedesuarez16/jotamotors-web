@@ -6,10 +6,10 @@ import "./globals.css";
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export const metadata: Metadata = {
-  title: "Jotamotors | Taller mecánico en Concón · Agenda por WhatsApp",
-  description: "¿Ruidos, dudas con los frenos o una mantención pendiente? Agenda tu revisión en Jotamotors. Servicio automotriz en Av. Borgoño 25600, Concón.",
+  title: "JMotors Concón | Taller mecánico · Agenda por WhatsApp",
+  description: "¿Ruidos, dudas con los frenos o una mantención pendiente? Agenda tu revisión en JMotors. Servicio automotriz en Av. Borgoño 25600, Concón.",
   openGraph: {
-    title: "Jotamotors · Tu auto, en buenas manos",
+    title: "JMotors · Tu auto, en buenas manos",
     description: "Taller mecánico en Concón. Cuéntanos qué necesita tu auto y agenda por WhatsApp.",
     locale: "es_CL",
     type: "website",
